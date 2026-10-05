@@ -1,0 +1,833 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sign In | AgriGuardians</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "DM Sans", sans-serif;
+            background: #ffffff;
+            color: #1c1c1c;
+            overflow-x: hidden;
+        }
+
+        /* Background */
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(26,58,31,0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(26,58,31,0.035) 1px, transparent 1px);
+            background-size: 45px 45px;
+            pointer-events: none;
+        }
+
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(70px);
+            pointer-events: none;
+            opacity: 0.25;
+        }
+
+        .orb-1 {
+            width: 350px;
+            height: 350px;
+            background: #dff3df;
+            top: -150px;
+            left: -100px;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: #e8f5df;
+            right: -100px;
+            bottom: -120px;
+        }
+
+        /* Main card */
+        .login-card {
+            width: 100%;
+            max-width: 900px;
+            min-height: 570px;
+            display: grid;
+            grid-template-columns: 0.95fr 1.25fr;
+            border-radius: 30px;
+            overflow: hidden;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 25px 70px rgba(26,58,31,0.12);
+            position: relative;
+            z-index: 5;
+            animation: cardIn 0.7s ease;
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* LEFT PANEL */
+        .card-left {
+            background: #f7f9f7;
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            color: #1a3a1f;
+            border-right: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .brand-mark {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
+            background: #1a3a1f;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 8px 20px rgba(26,58,31,0.15);
+        }
+
+        .brand-name {
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.25;
+            max-width: 190px;
+        }
+
+        .left-content {
+            margin-top: auto;
+            margin-bottom: auto;
+            padding: 55px 0 40px;
+        }
+
+        .secure-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 7px 13px;
+            border-radius: 999px;
+            background: rgba(26,58,31,0.05);
+            border: 1px solid rgba(26,58,31,0.09);
+            color: #2d6a35;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .secure-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #6fcf7a;
+            box-shadow: 0 0 0 4px rgba(111,207,122,0.12);
+        }
+
+        .left-heading {
+            font-family: "DM Serif Display", serif;
+            font-size: 56px;
+            line-height: 0.98;
+            font-weight: 400;
+            color: #1a3a1f;
+            margin-bottom: 20px;
+        }
+
+        .left-heading em {
+            color: #3d9e4a;
+            font-style: italic;
+        }
+
+        .left-sub {
+            max-width: 280px;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #5c625d;
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #4a4a4a;
+            font-size: 13px;
+            font-weight: 300;
+        }
+
+        .feature-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #3d9e4a;
+            flex-shrink: 0;
+        }
+
+        .left-footer {
+            margin-top: auto;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #8a8a8a;
+            font-size: 13px;
+            transition: 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #1a3a1f;
+            transform: translateX(-2px);
+        }
+
+        /* RIGHT PANEL */
+        .card-right {
+            padding: 64px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #ffffff;
+        }
+
+        .form-header {
+            margin-bottom: 38px;
+        }
+
+        .form-header h2 {
+            font-family: "DM Serif Display", serif;
+            font-size: 38px;
+            font-weight: 400;
+            margin-bottom: 8px;
+            color: #1c1c1c;
+        }
+
+        .form-header p {
+            font-size: 13px;
+            color: #8a8a8a;
+            font-weight: 300;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 23px;
+        }
+
+        .form-group {
+            width: 100%;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 17px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8a8a8a;
+            pointer-events: none;
+            transition: 0.2s ease;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            height: 56px;
+            border: 1px solid #e4e1db;
+            border-radius: 13px;
+            outline: none;
+            padding: 19px 45px 5px 48px;
+            font-family: "DM Sans", sans-serif;
+            font-size: 14px;
+            color: #1c1c1c;
+            background: white;
+            transition: 0.25s ease;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #3d9e4a;
+            box-shadow: 0 0 0 4px rgba(61,158,74,0.06);
+        }
+
+        .input-wrapper input:focus + label,
+        .input-wrapper input:not(:placeholder-shown) + label {
+            top: 9px;
+            font-size: 9px;
+            letter-spacing: 0.6px;
+            color: #3d9e4a;
+        }
+
+        .input-wrapper label {
+            position: absolute;
+            left: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8a8a8a;
+            font-size: 13px;
+            pointer-events: none;
+            transition: 0.2s ease;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #8a8a8a;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .toggle-password:hover {
+            color: #2d6a35;
+        }
+
+        .submit-btn {
+            height: 56px;
+            width: 100%;
+            border: none;
+            border-radius: 13px;
+            background: #1a3a1f;
+            color: white;
+            font-family: "DM Sans", sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 5px;
+            transition: 0.25s ease;
+            box-shadow: 0 10px 25px rgba(26,58,31,0.12);
+        }
+
+        .submit-btn:hover {
+            background: #2d6a35;
+            transform: translateY(-1px);
+            box-shadow: 0 13px 28px rgba(26,58,31,0.17);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 28px;
+            color: #8a8a8a;
+            font-size: 13px;
+            font-weight: 300;
+        }
+
+        .signup-link a {
+            color: #2d6a35;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-link a:hover {
+            color: #1a3a1f;
+        }
+
+        /* Messages */
+        .toast-container {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            min-width: 280px;
+            padding: 13px 16px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+            border: 1px solid #eeeeee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            animation: toastIn 0.35s ease;
+        }
+
+        .toast.success {
+            color: #2d6a35;
+            border-left: 4px solid #3d9e4a;
+        }
+
+        .toast.error {
+            color: #b42318;
+            border-left: 4px solid #d92d20;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOut {
+            to {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+            .page-wrapper {
+                padding: 18px;
+            }
+
+            .login-card {
+                grid-template-columns: 1fr;
+                max-width: 520px;
+            }
+
+            .card-left {
+                padding: 35px;
+                min-height: 390px;
+            }
+
+            .card-right {
+                padding: 40px 30px;
+            }
+
+            .left-heading {
+                font-size: 46px;
+            }
+
+            .left-content {
+                padding: 35px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-left,
+            .card-right {
+                padding: 28px 22px;
+            }
+
+            .left-heading {
+                font-size: 42px;
+            }
+
+            .form-header h2 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+
+{% if messages %}
+<div class="toast-container">
+    {% for message in messages %}
+    <div class="toast {{ message.tags }}">
+        {% if message.tags == 'success' %}
+        ✓
+        {% else %}
+        !
+        {% endif %}
+        <span>{{ message }}</span>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="page-wrapper">
+
+    <div class="login-card">
+
+        <!-- LEFT SIDE -->
+        <div class="card-left">
+
+            <div class="brand-mark">
+
+                <div class="brand-icon">
+                    🛡
+                </div>
+
+                <span class="brand-name">
+                    AgriGuardians
+                </span>
+
+            </div>
+
+            <div class="left-content">
+
+                <div class="secure-badge">
+                    <span class="secure-dot"></span>
+                    Secure Access
+                </div>
+
+                <h1 class="left-heading">
+                    Welcome<br>
+                    <em>back.</em>
+                </h1>
+
+                <p class="left-sub">
+                    Sign in to pick up right where you left off with your crop analysis.
+                </p>
+
+                <div class="feature-list">
+
+                    <div class="feature-item">
+                        <div class="feature-dot"></div>
+                        <span>Access your Prediction History</span>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-dot"></div>
+                        <span>Monitor crop health trends</span>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-dot"></div>
+                        <span>Get AI-powered treatment advice</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="left-footer">
+
+                <a href="{% url 'home' %}" class="back-link">
+                    ←
+                    Back to Home
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+        {% if page == 'login' %}
+
+        <div class="card-right">
+
+            <div class="form-header">
+
+                <h2>Sign In</h2>
+
+                <p>
+                    Enter your credentials to continue
+                </p>
+
+            </div>
+
+
+            <!-- IMPORTANT:
+                 This remains a normal Django POST.
+                 Your existing loginPage() handles it.
+            -->
+
+            <form method="POST" action="">
+
+                {% csrf_token %}
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <div class="input-wrapper">
+
+                        <svg class="input-icon"
+                             width="17"
+                             height="17"
+                             viewBox="0 0 16 16"
+                             fill="none">
+
+                            <rect x="1.5"
+                                  y="3.5"
+                                  width="13"
+                                  height="9"
+                                  rx="1.5"
+                                  stroke="currentColor"
+                                  stroke-width="1.3"/>
+
+                            <path d="M1.5 5.5L8 9.5L14.5 5.5"
+                                  stroke="currentColor"
+                                  stroke-width="1.3"/>
+
+                        </svg>
+
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            placeholder=" "
+                            autocomplete="email"
+                            required
+                        >
+
+                        <label for="email">
+                            Email address
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <div class="input-wrapper">
+
+                        <svg class="input-icon"
+                             width="17"
+                             height="17"
+                             viewBox="0 0 16 16"
+                             fill="none">
+
+                            <rect x="3"
+                                  y="7"
+                                  width="10"
+                                  height="7.5"
+                                  rx="1.5"
+                                  stroke="currentColor"
+                                  stroke-width="1.3"/>
+
+                            <path d="M5.5 7V5C5.5 3.619 6.619 2.5 8 2.5C9.381 2.5 10.5 3.619 10.5 5V7"
+                                  stroke="currentColor"
+                                  stroke-width="1.3"
+                                  stroke-linecap="round"/>
+
+                        </svg>
+
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            placeholder=" "
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            onclick="togglePassword()"
+                            aria-label="Toggle password visibility"
+                        >
+
+                            <svg id="eyeIcon"
+                                 width="18"
+                                 height="18"
+                                 viewBox="0 0 16 16"
+                                 fill="none">
+
+                                <path d="M1 8C1 8 3.5 3 8 3C12.5 3 15 8 15 8C15 8 12.5 13 8 13C3.5 13 1 8 1 8Z"
+                                      stroke="currentColor"
+                                      stroke-width="1.3"/>
+
+                                <circle cx="8"
+                                        cy="8"
+                                        r="2"
+                                        stroke="currentColor"
+                                        stroke-width="1.3"/>
+
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SUBMIT -->
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+
+                    <span>
+                        Sign In
+                    </span>
+
+                    <svg width="18"
+                         height="18"
+                         viewBox="0 0 18 18"
+                         fill="none">
+
+                        <path d="M3 9H15M15 9L10 4M15 9L10 14"
+                              stroke="currentColor"
+                              stroke-width="1.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"/>
+
+                    </svg>
+
+                </button>
+
+            </form>
+
+
+            <!-- SIGNUP -->
+
+            <p class="signup-link">
+
+                Don't have an account?
+
+                <a href="{% url 'signup' %}">
+                    Create one
+                </a>
+
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<script>
+
+function togglePassword() {
+
+    const input = document.getElementById("password");
+    const icon = document.getElementById("eyeIcon");
+
+    const showPassword = input.type === "password";
+
+    input.type = showPassword ? "text" : "password";
+
+    if (showPassword) {
+
+        icon.innerHTML = `
+            <path d="M2 2L14 14"
+                  stroke="currentColor"
+                  stroke-width="1.3"
+                  stroke-linecap="round"/>
+
+            <path d="M6.5 3.5C7 3.2 7.5 3 8 3C12.5 3 15 8 15 8C14.5 9 13.7 10.1 12.7 11"
+                  stroke="currentColor"
+                  stroke-width="1.3"
+                  stroke-linecap="round"/>
+
+            <path d="M4.2 4.7C2.7 5.9 1.5 7.6 1 8C1 8 3.5 13 8 13C9.2 13 10.3 12.6 11.3 12"
+                  stroke="currentColor"
+                  stroke-width="1.3"
+                  stroke-linecap="round"/>
+        `;
+
+    } else {
+
+        icon.innerHTML = `
+            <path d="M1 8C1 8 3.5 3 8 3C12.5 3 15 8 15 8C15 8 12.5 13 8 13C3.5 13 1 8 1 8Z"
+                  stroke="currentColor"
+                  stroke-width="1.3"/>
+
+            <circle cx="8"
+                    cy="8"
+                    r="2"
+                    stroke="currentColor"
+                    stroke-width="1.3"/>
+        `;
+    }
+}
+
+
+/* Automatically hide messages */
+
+setTimeout(() => {
+
+    document.querySelectorAll(".toast").forEach(toast => {
+
+        toast.style.animation = "slideOut 0.4s ease forwards";
+
+        setTimeout(() => {
+            toast.remove();
+        }, 400);
+
+    });
+
+}, 4000);
+
+</script>
+
+</body>
+</html>

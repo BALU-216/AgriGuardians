@@ -1,0 +1,2155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Prediction History | AgriGuardians</title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        /* =====================================================
+           THEME
+        ===================================================== */
+
+        :root {
+
+            --green-dark: #1a3a1f;
+            --green-deep: #204b27;
+            --green-mid: #2d6a35;
+            --green-accent: #3d9e4a;
+            --green-light: #6fcf7a;
+
+            --green-pale: #edf7ee;
+
+            --cream: #f7f9f7;
+
+            --white: #ffffff;
+
+            --text-dark: #1c1c1c;
+            --text-mid: #4a4a4a;
+            --text-muted: #8a8a8a;
+
+            --border: #e4e1db;
+
+            --shadow:
+                0 18px 50px rgba(26, 58, 31, 0.10);
+        }
+
+
+        /* =====================================================
+           BODY
+        ===================================================== */
+
+        body {
+
+            min-height: 100vh;
+
+            font-family:
+                "DM Sans",
+                sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at 5% 5%,
+                    rgba(111, 207, 122, 0.12),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 95% 95%,
+                    rgba(61, 158, 74, 0.08),
+                    transparent 30%
+                ),
+                #f7f9f7;
+
+            color: var(--text-dark);
+
+            overflow-x: hidden;
+        }
+
+
+        /* =====================================================
+           BACKGROUND GRID
+        ===================================================== */
+
+        .bg-grid {
+
+            position: fixed;
+
+            inset: 0;
+
+            background-image:
+
+                linear-gradient(
+                    rgba(61, 158, 74, 0.045) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(61, 158, 74, 0.045) 1px,
+                    transparent 1px
+                );
+
+            background-size: 48px 48px;
+
+            pointer-events: none;
+
+            z-index: -2;
+        }
+
+
+        .bg-orb {
+
+            position: fixed;
+
+            border-radius: 50%;
+
+            filter: blur(80px);
+
+            pointer-events: none;
+
+            z-index: -1;
+        }
+
+
+        .orb-1 {
+
+            width: 420px;
+            height: 420px;
+
+            background:
+                rgba(111, 207, 122, 0.10);
+
+            top: -160px;
+            right: -100px;
+        }
+
+
+        .orb-2 {
+
+            width: 350px;
+            height: 350px;
+
+            background:
+                rgba(45, 106, 53, 0.08);
+
+            bottom: -120px;
+            left: -100px;
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        #navbar {
+
+            width: 100%;
+
+            height: 76px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 6%;
+
+            background:
+                rgba(255, 255, 255, 0.88);
+
+            backdrop-filter:
+                blur(18px);
+
+            border-bottom:
+                1px solid
+                rgba(26, 58, 31, 0.07);
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 20;
+
+            transition:
+                height 0.25s,
+                box-shadow 0.25s;
+        }
+
+
+        #navbar.shrink {
+
+            height: 64px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(26, 58, 31, 0.07);
+        }
+
+
+        .nav-brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            text-decoration: none;
+
+            color: var(--green-dark);
+        }
+
+
+        .brand-icon {
+
+            width: 38px;
+            height: 38px;
+
+            border-radius: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                var(--green-dark);
+
+            color: white;
+
+            transition:
+                transform 0.2s;
+        }
+
+
+        .nav-brand:hover .brand-icon {
+
+            transform:
+                rotate(-4deg);
+        }
+
+
+        .brand-name {
+
+            font-family:
+                "DM Serif Display",
+                serif;
+
+            font-size: 1.05rem;
+
+            white-space: nowrap;
+        }
+
+
+        .nav-right {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 28px;
+        }
+
+
+        .nav-link {
+
+            color:
+                var(--text-mid);
+
+            text-decoration: none;
+
+            font-size: 0.83rem;
+
+            font-weight: 400;
+
+            transition:
+                color 0.2s;
+        }
+
+
+        .nav-link:hover {
+
+            color:
+                var(--green-mid);
+        }
+
+
+        .nav-avatar-link {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-decoration: none;
+        }
+
+
+        .profile-pic {
+
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+
+            object-fit: cover;
+
+            border:
+                2px solid
+                white;
+
+            box-shadow:
+                0 3px 12px
+                rgba(26, 58, 31, 0.15);
+
+            transition:
+                transform 0.2s,
+                border-color 0.2s;
+        }
+
+
+        .profile-pic:hover {
+
+            transform: scale(1.05);
+
+            border-color:
+                var(--green-light);
+        }
+
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        .page-wrapper {
+
+            width: 100%;
+
+            max-width: 1180px;
+
+            margin: 0 auto;
+
+            padding:
+                55px 28px 70px;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .page-header {
+
+            display: flex;
+
+            align-items: flex-end;
+
+            justify-content: space-between;
+
+            gap: 30px;
+
+            margin-bottom: 30px;
+        }
+
+
+        .section-label {
+
+            color:
+                var(--green-mid);
+
+            font-size: 0.68rem;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.16em;
+
+            margin-bottom: 9px;
+        }
+
+
+        .page-header h1 {
+
+            font-family:
+                "DM Serif Display",
+                serif;
+
+            font-size: 2.8rem;
+
+            font-weight: 400;
+
+            line-height: 1;
+
+            color:
+                var(--green-dark);
+
+            margin-bottom: 10px;
+        }
+
+
+        .page-header p {
+
+            color:
+                var(--text-muted);
+
+            font-size: 0.88rem;
+
+            font-weight: 300;
+
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           PRIMARY BUTTON
+        ===================================================== */
+
+        .btn-primary {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            min-height: 44px;
+
+            padding:
+                0 17px;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green-dark),
+                    var(--green-accent)
+                );
+
+            color: white;
+
+            text-decoration: none;
+
+            border: none;
+
+            font-size: 0.8rem;
+
+            font-weight: 600;
+
+            box-shadow:
+                0 8px 20px
+                rgba(26, 58, 31, 0.15);
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s;
+        }
+
+
+        .btn-primary:hover {
+
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+                0 11px 25px
+                rgba(26, 58, 31, 0.20);
+        }
+
+
+        /* =====================================================
+           STATS BAR
+        ===================================================== */
+
+        .stats-bar {
+
+            min-height: 58px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0 15px 0 17px;
+
+            background:
+                rgba(255, 255, 255, 0.82);
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 13px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(26, 58, 31, 0.04);
+
+            margin-bottom: 24px;
+        }
+
+
+        .stat-pill {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color:
+                var(--green-mid);
+
+            font-size: 0.75rem;
+
+            font-weight: 600;
+        }
+
+
+        .stat-divider {
+
+            flex: 1;
+        }
+
+
+        /* =====================================================
+           SORT
+        ===================================================== */
+
+        .sort-wrapper {
+
+            position: relative;
+        }
+
+
+        .sort-btn {
+
+            height: 35px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding:
+                0 10px;
+
+            background:
+                white;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 8px;
+
+            color:
+                var(--text-mid);
+
+            font-family:
+                "DM Sans",
+                sans-serif;
+
+            font-size: 0.74rem;
+
+            cursor: pointer;
+
+            transition:
+                border-color 0.2s,
+                color 0.2s;
+        }
+
+
+        .sort-btn:hover {
+
+            border-color:
+                var(--green-accent);
+
+            color:
+                var(--green-mid);
+        }
+
+
+        .sort-chevron {
+
+            transition:
+                transform 0.2s;
+        }
+
+
+        .sort-menu {
+
+            position: absolute;
+
+            top: calc(100% + 7px);
+
+            right: 0;
+
+            width: 175px;
+
+            background:
+                white;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 15px 35px
+                rgba(26, 58, 31, 0.13);
+
+            padding: 5px;
+
+            opacity: 0;
+
+            visibility: hidden;
+
+            transform:
+                translateY(-5px);
+
+            transition:
+                opacity 0.18s,
+                transform 0.18s,
+                visibility 0.18s;
+
+            z-index: 30;
+        }
+
+
+        .sort-menu.open {
+
+            opacity: 1;
+
+            visibility: visible;
+
+            transform:
+                translateY(0);
+        }
+
+
+        .sort-option {
+
+            width: 100%;
+
+            border: none;
+
+            background: transparent;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            padding:
+                9px 10px;
+
+            border-radius: 7px;
+
+            color:
+                var(--text-mid);
+
+            font-family:
+                "DM Sans",
+                sans-serif;
+
+            font-size: 0.72rem;
+
+            text-align: left;
+
+            cursor: pointer;
+
+            transition:
+                background 0.15s,
+                color 0.15s;
+        }
+
+
+        .sort-option:hover,
+        .sort-option.active {
+
+            background:
+                var(--green-pale);
+
+            color:
+                var(--green-mid);
+        }
+
+
+        /* =====================================================
+           HISTORY GRID
+        ===================================================== */
+
+        .history-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 20px;
+        }
+
+
+        /* =====================================================
+           HISTORY CARD
+        ===================================================== */
+
+        .history-card {
+
+            background:
+                white;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 16px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 7px 25px
+                rgba(26, 58, 31, 0.055);
+
+            opacity: 0;
+
+            transform:
+                translateY(15px);
+
+            animation:
+                cardIn 0.55s ease forwards;
+
+            transition:
+                transform 0.22s,
+                box-shadow 0.22s,
+                border-color 0.22s;
+        }
+
+
+        @keyframes cardIn {
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+            }
+        }
+
+
+        .history-card:hover {
+
+            transform:
+                translateY(-4px);
+
+            box-shadow:
+                0 15px 38px
+                rgba(26, 58, 31, 0.11);
+
+            border-color:
+                #cddfce;
+        }
+
+
+        /* =====================================================
+           IMAGE
+        ===================================================== */
+
+        .card-image-wrap {
+
+            position: relative;
+
+            width: 100%;
+
+            height: 205px;
+
+            background:
+                #edf3ed;
+
+            overflow: hidden;
+        }
+
+
+        .card-image-wrap img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+
+            display: block;
+
+            transition:
+                transform 0.35s;
+        }
+
+
+        .history-card:hover
+        .card-image-wrap img {
+
+            transform:
+                scale(1.035);
+        }
+
+
+        .card-image-overlay {
+
+            position: absolute;
+
+            inset: 0;
+
+            display: flex;
+
+            align-items: flex-start;
+
+            justify-content: flex-end;
+
+            padding: 11px;
+        }
+
+
+        /* =====================================================
+           CONFIDENCE BADGES
+        ===================================================== */
+
+        .confidence-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-width: 61px;
+
+            height: 27px;
+
+            padding:
+                0 8px;
+
+            border-radius: 999px;
+
+            font-size: 0.69rem;
+
+            font-weight: 700;
+
+            backdrop-filter:
+                blur(10px);
+        }
+
+
+        .confidence-badge.high {
+
+            background:
+                rgba(235, 250, 237, 0.95);
+
+            color:
+                #247332;
+
+            border:
+                1px solid
+                #bfe3c3;
+        }
+
+
+        .confidence-badge.mid {
+
+            background:
+                rgba(255, 248, 225, 0.95);
+
+            color:
+                #9a6700;
+
+            border:
+                1px solid
+                #eadcae;
+        }
+
+
+        .confidence-badge.low {
+
+            background:
+                rgba(254, 240, 240, 0.95);
+
+            color:
+                #b42318;
+
+            border:
+                1px solid
+                #f0c6c3;
+        }
+
+
+        /* =====================================================
+           CARD BODY
+        ===================================================== */
+
+        .card-body {
+
+            padding:
+                17px 18px 15px;
+        }
+
+
+        .card-tags {
+
+            margin-bottom: 8px;
+        }
+
+
+        .tag {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            min-height: 23px;
+
+            padding:
+                0 8px;
+
+            border-radius: 6px;
+
+            background:
+                var(--green-pale);
+
+            color:
+                var(--green-mid);
+
+            font-size: 0.66rem;
+
+            font-weight: 600;
+
+            border:
+                1px solid
+                #d5e9d7;
+        }
+
+
+        .disease-name {
+
+            font-family:
+                "DM Serif Display",
+                serif;
+
+            font-size: 1.2rem;
+
+            line-height: 1.25;
+
+            font-weight: 400;
+
+            color:
+                var(--text-dark);
+
+            min-height: 48px;
+
+            margin-bottom: 14px;
+        }
+
+
+        /* =====================================================
+           CONFIDENCE
+        ===================================================== */
+
+        .confidence-row {
+
+            margin-bottom: 14px;
+        }
+
+
+        .conf-label {
+
+            display: block;
+
+            font-size: 0.64rem;
+
+            color:
+                var(--text-muted);
+
+            margin-bottom: 6px;
+        }
+
+
+        .conf-bar-wrap {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+        }
+
+
+        .conf-bar {
+
+            flex: 1;
+
+            height: 6px;
+
+            background:
+                #e7ede7;
+
+            border-radius: 999px;
+
+            overflow: hidden;
+        }
+
+
+        .conf-fill {
+
+            height: 100%;
+
+            border-radius: 999px;
+
+            transition:
+                width 0.6s ease;
+        }
+
+
+        .conf-fill.high {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--green-mid),
+                    var(--green-light)
+                );
+        }
+
+
+        .conf-fill.mid {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #b7791f,
+                    #eabf58
+                );
+        }
+
+
+        .conf-fill.low {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #b42318,
+                    #ef7b72
+                );
+        }
+
+
+        .conf-value {
+
+            font-size: 0.68rem;
+
+            font-weight: 700;
+
+            color:
+                var(--green-mid);
+
+            min-width: 40px;
+
+            text-align: right;
+        }
+
+
+        /* =====================================================
+           CARD FOOTER
+        ===================================================== */
+
+        .card-footer {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding-top: 11px;
+
+            border-top:
+                1px solid
+                #edf0ed;
+
+            color:
+                var(--text-muted);
+
+            font-size: 0.68rem;
+
+            font-weight: 300;
+        }
+
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
+
+        .empty-state {
+
+            grid-column:
+                1 / -1;
+
+            min-height: 420px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            background:
+                rgba(255, 255, 255, 0.82);
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 18px;
+
+            padding: 50px 25px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(26, 58, 31, 0.04);
+        }
+
+
+        .empty-icon {
+
+            width: 80px;
+            height: 80px;
+
+            border-radius: 22px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                var(--green-pale);
+
+            color:
+                var(--green-accent);
+
+            margin-bottom: 18px;
+        }
+
+
+        .empty-state h3 {
+
+            font-family:
+                "DM Serif Display",
+                serif;
+
+            font-size: 1.5rem;
+
+            font-weight: 400;
+
+            color:
+                var(--green-dark);
+
+            margin-bottom: 7px;
+        }
+
+
+        .empty-state p {
+
+            font-size: 0.82rem;
+
+            color:
+                var(--text-muted);
+
+            font-weight: 300;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .history-grid {
+
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .page-wrapper {
+
+                padding:
+                    42px 22px 60px;
+            }
+        }
+
+
+        @media (max-width: 680px) {
+
+            #navbar {
+
+                padding:
+                    0 18px;
+            }
+
+            .brand-name {
+
+                display: none;
+            }
+
+            .nav-right {
+
+                gap: 14px;
+            }
+
+            .nav-link {
+
+                font-size: 0.72rem;
+            }
+
+            .page-header {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .page-header h1 {
+
+                font-size: 2.35rem;
+            }
+
+            .history-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+
+                gap: 12px;
+            }
+        }
+
+
+        @media (max-width: 430px) {
+
+            .page-wrapper {
+
+                padding:
+                    30px 14px 50px;
+            }
+
+            .page-header h1 {
+
+                font-size: 2.1rem;
+            }
+
+            .btn-primary {
+
+                width: 100%;
+            }
+
+            .stats-bar {
+
+                min-height: auto;
+
+                padding: 10px;
+            }
+
+            .sort-btn {
+
+                width: 100%;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="bg-grid"></div>
+
+<div class="bg-orb orb-1"></div>
+
+<div class="bg-orb orb-2"></div>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav id="navbar">
+
+    <a href="{% url 'home' %}"
+       class="nav-brand">
+
+        <div class="brand-icon">
+
+            <svg width="20"
+                 height="20"
+                 viewBox="0 0 28 28"
+                 fill="none">
+
+                <path
+                    d="M14 2L26 8V20L14 26L2 20V8L14 2Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    fill="none"/>
+
+                <path
+                    d="M14 8L20 11V17L14 20L8 17V11L14 8Z"
+                    fill="currentColor"
+                    opacity="0.3"/>
+
+            </svg>
+
+        </div>
+
+        <span class="brand-name">
+            AgriGuardians
+        </span>
+
+    </a>
+
+
+    <div class="nav-right">
+
+        <a href="{% url 'home' %}"
+           class="nav-link">
+            Home
+        </a>
+
+        <a href="/predict"
+           class="nav-link">
+            New Prediction
+        </a>
+
+        <a href="/profile/edit/"
+           class="nav-avatar-link">
+
+            {% if user.profile_picture %}
+
+                <img
+                    src="{{ user.profile_picture.url }}"
+                    class="profile-pic"
+                    alt="Profile">
+
+            {% else %}
+
+                <img
+                    src="{% static 'images/default-avatar.png' %}"
+                    class="profile-pic"
+                    alt="Profile">
+
+            {% endif %}
+
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+     PAGE
+===================================================== -->
+
+<div class="page-wrapper">
+
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div class="page-header-text">
+
+            <div class="section-label">
+                Prediction History
+            </div>
+
+            <h1>
+                Your Predictions
+            </h1>
+
+            <p>
+                A record of every crop diagnosis you've run.
+            </p>
+
+        </div>
+
+
+        <a href="/predict"
+           class="btn-primary">
+
+            <svg width="16"
+                 height="16"
+                 viewBox="0 0 18 18"
+                 fill="none">
+
+                <path
+                    d="M9 2V16M2 9H16"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"/>
+
+            </svg>
+
+            New Prediction
+
+        </a>
+
+    </div>
+
+
+    <!-- =================================================
+         STATS + SORT
+    ================================================= -->
+
+    {% if history %}
+
+    <div class="stats-bar">
+
+        <div class="stat-pill">
+
+            <svg width="14"
+                 height="14"
+                 viewBox="0 0 16 16"
+                 fill="none">
+
+                <rect x="2"
+                      y="2"
+                      width="5"
+                      height="5"
+                      rx="1"
+                      stroke="currentColor"
+                      stroke-width="1.3"/>
+
+                <rect x="9"
+                      y="2"
+                      width="5"
+                      height="5"
+                      rx="1"
+                      stroke="currentColor"
+                      stroke-width="1.3"/>
+
+                <rect x="2"
+                      y="9"
+                      width="5"
+                      height="5"
+                      rx="1"
+                      stroke="currentColor"
+                      stroke-width="1.3"/>
+
+                <rect x="9"
+                      y="9"
+                      width="5"
+                      height="5"
+                      rx="1"
+                      stroke="currentColor"
+                      stroke-width="1.3"/>
+
+            </svg>
+
+            <span>
+                {{ history|length }}
+                scan{{ history|length|pluralize }}
+            </span>
+
+        </div>
+
+
+        <div class="stat-divider"></div>
+
+
+        <!-- SORT -->
+
+        <div class="sort-wrapper"
+             id="sortWrapper">
+
+            <button
+                class="sort-btn"
+                id="sortBtn"
+                aria-haspopup="true"
+                aria-expanded="false">
+
+                <svg width="13"
+                     height="13"
+                     viewBox="0 0 14 14"
+                     fill="none">
+
+                    <path
+                        d="M2 4H12M4 7H10M6 10H8"
+                        stroke="currentColor"
+                        stroke-width="1.3"
+                        stroke-linecap="round"/>
+
+                </svg>
+
+                <span id="sortLabel">
+                    Most Recent
+                </span>
+
+                <svg
+                    class="sort-chevron"
+                    id="sortChevron"
+                    width="11"
+                    height="11"
+                    viewBox="0 0 12 12"
+                    fill="none">
+
+                    <path
+                        d="M3 4.5L6 7.5L9 4.5"
+                        stroke="currentColor"
+                        stroke-width="1.4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+
+                </svg>
+
+            </button>
+
+
+            <div
+                class="sort-menu"
+                id="sortMenu"
+                role="menu">
+
+
+                <button
+                    class="sort-option active"
+                    data-sort="newest"
+                    role="menuitem">
+
+                    ◷
+
+                    Most Recent
+
+                </button>
+
+
+                <button
+                    class="sort-option"
+                    data-sort="oldest"
+                    role="menuitem">
+
+                    ◴
+
+                    Oldest First
+
+                </button>
+
+
+                <button
+                    class="sort-option"
+                    data-sort="confidence"
+                    role="menuitem">
+
+                    ▥
+
+                    Most Confident
+
+                </button>
+
+
+                <button
+                    class="sort-option"
+                    data-sort="common"
+                    role="menuitem">
+
+                    ☆
+
+                    Most Common
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =================================================
+         HISTORY GRID
+    ================================================= -->
+
+    <div
+        class="history-grid"
+        id="historyGrid">
+
+
+        {% for item in history %}
+
+        <div
+            class="history-card"
+
+            data-date="{{ item.created_at|date:'U' }}"
+
+            data-confidence="{{ item.confidence }}"
+
+            data-disease="{{ item.disease }}"
+
+            style="
+                animation-delay:
+                {{ forloop.counter0 }}00ms;
+            "
+        >
+
+
+            <!-- IMAGE -->
+
+            <div class="card-image-wrap">
+
+                <img
+                    src="{{ item.image.url }}"
+                    alt="{{ item.crop }} leaf"
+                    loading="lazy">
+
+
+                <div class="card-image-overlay">
+
+                    <span
+                        class="
+                            confidence-badge
+
+                            {% if item.confidence >= 85 %}
+                                high
+                            {% elif item.confidence >= 60 %}
+                                mid
+                            {% else %}
+                                low
+                            {% endif %}
+                        "
+                    >
+
+                        {{ item.confidence }}%
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- BODY -->
+
+            <div class="card-body">
+
+
+                <div class="card-tags">
+
+                    <span class="tag crop-tag">
+
+                        {{ item.crop }}
+
+                    </span>
+
+                </div>
+
+
+                <h3 class="disease-name">
+
+                    {{ item.disease }}
+
+                </h3>
+
+
+                <!-- CONFIDENCE -->
+
+                <div class="confidence-row">
+
+                    <span class="conf-label">
+                        Confidence
+                    </span>
+
+
+                    <div class="conf-bar-wrap">
+
+                        <div class="conf-bar">
+
+                            <div
+                                class="
+                                    conf-fill
+
+                                    {% if item.confidence >= 85 %}
+                                        high
+                                    {% elif item.confidence >= 60 %}
+                                        mid
+                                    {% else %}
+                                        low
+                                    {% endif %}
+                                "
+
+                                style="
+                                    width:
+                                    {{ item.confidence }}%;
+                                "
+                            ></div>
+
+                        </div>
+
+
+                        <span class="conf-value">
+
+                            {{ item.confidence }}%
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="card-footer">
+
+                    <svg width="12"
+                         height="12"
+                         viewBox="0 0 14 14"
+                         fill="none">
+
+                        <circle
+                            cx="7"
+                            cy="7"
+                            r="5.5"
+                            stroke="currentColor"
+                            stroke-width="1.2"/>
+
+                        <path
+                            d="M7 4V7.5L9.5 9"
+                            stroke="currentColor"
+                            stroke-width="1.2"
+                            stroke-linecap="round"/>
+
+                    </svg>
+
+                    <span>
+
+                        {{ item.created_at|date:"M d, Y · H:i" }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% empty %}
+
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+
+                <svg width="40"
+                     height="40"
+                     viewBox="0 0 48 48"
+                     fill="none">
+
+                    <path
+                        d="M24 4L44 14V34L24 44L4 34V14L24 4Z"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        fill="none"
+                        opacity="0.3"/>
+
+                    <path
+                        d="M24 16L34 21V31L24 36L14 31V21L24 16Z"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        fill="none"
+                        opacity="0.5"/>
+
+                    <path
+                        d="M18 24H30M24 18V30"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"/>
+
+                </svg>
+
+            </div>
+
+
+            <h3>
+                No predictions yet
+            </h3>
+
+
+            <p>
+                Upload a crop leaf image to run your first AI diagnosis.
+            </p>
+
+
+            <a
+                href="/predict"
+                class="btn-primary">
+
+                Start Your First Scan
+
+            </a>
+
+        </div>
+
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+
+/* =====================================================
+   NAVBAR SHRINK
+===================================================== */
+
+const navbar =
+    document.getElementById("navbar");
+
+
+window.addEventListener(
+    "scroll",
+    () => {
+
+        navbar.classList.toggle(
+            "shrink",
+            window.scrollY > 40
+        );
+
+    }
+);
+
+
+/* =====================================================
+   SORT
+===================================================== */
+
+const sortBtn =
+    document.getElementById("sortBtn");
+
+const sortMenu =
+    document.getElementById("sortMenu");
+
+const sortLabel =
+    document.getElementById("sortLabel");
+
+const sortChevron =
+    document.getElementById("sortChevron");
+
+const grid =
+    document.getElementById("historyGrid");
+
+
+if (sortBtn) {
+
+
+    sortBtn.addEventListener(
+        "click",
+        (e) => {
+
+            e.stopPropagation();
+
+            const isOpen =
+                sortMenu.classList.toggle("open");
+
+            sortBtn.setAttribute(
+                "aria-expanded",
+                isOpen
+            );
+
+            sortChevron.style.transform =
+                isOpen
+                    ? "rotate(180deg)"
+                    : "rotate(0deg)";
+
+        }
+    );
+
+
+    document.addEventListener(
+        "click",
+        () => {
+
+            sortMenu.classList.remove("open");
+
+            sortBtn.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            sortChevron.style.transform =
+                "rotate(0deg)";
+
+        }
+    );
+
+
+    sortMenu
+        .querySelectorAll(".sort-option")
+        .forEach(
+            opt => {
+
+                opt.addEventListener(
+                    "click",
+                    (e) => {
+
+                        e.stopPropagation();
+
+
+                        sortMenu
+                            .querySelectorAll(
+                                ".sort-option"
+                            )
+                            .forEach(
+                                o =>
+                                    o.classList.remove(
+                                        "active"
+                                    )
+                            );
+
+
+                        opt.classList.add("active");
+
+
+                        sortLabel.textContent =
+                            opt.textContent.trim();
+
+
+                        sortMenu.classList.remove(
+                            "open"
+                        );
+
+
+                        sortBtn.setAttribute(
+                            "aria-expanded",
+                            "false"
+                        );
+
+
+                        sortChevron.style.transform =
+                            "rotate(0deg)";
+
+
+                        sortCards(
+                            opt.dataset.sort
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+   SORT CARDS
+===================================================== */
+
+function sortCards(mode) {
+
+
+    const cards =
+        Array.from(
+            grid.querySelectorAll(
+                ".history-card"
+            )
+        );
+
+
+    if (!cards.length)
+        return;
+
+
+    /* Disease frequency */
+
+    const freq = {};
+
+
+    cards.forEach(
+        card => {
+
+            const disease =
+                card.dataset.disease;
+
+            freq[disease] =
+                (freq[disease] || 0) + 1;
+
+        }
+    );
+
+
+    /* Sort */
+
+    cards.sort(
+        (a, b) => {
+
+            switch (mode) {
+
+
+                case "newest":
+
+                    return (
+                        Number(b.dataset.date) -
+                        Number(a.dataset.date)
+                    );
+
+
+                case "oldest":
+
+                    return (
+                        Number(a.dataset.date) -
+                        Number(b.dataset.date)
+                    );
+
+
+                case "confidence":
+
+                    return (
+                        Number(b.dataset.confidence) -
+                        Number(a.dataset.confidence)
+                    );
+
+
+                case "common": {
+
+                    const difference =
+                        (freq[b.dataset.disease] || 0) -
+                        (freq[a.dataset.disease] || 0);
+
+
+                    return difference !== 0
+
+                        ? difference
+
+                        : Number(b.dataset.date) -
+                          Number(a.dataset.date);
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* Re-append */
+
+    cards.forEach(
+        (card, index) => {
+
+            card.style.transition = "none";
+
+            card.style.opacity = "0";
+
+            card.style.transform =
+                "translateY(10px)";
+
+            grid.appendChild(card);
+
+
+            requestAnimationFrame(
+                () => {
+
+                    requestAnimationFrame(
+                        () => {
+
+                            card.style.transition =
+                                `opacity 0.3s ease ${index * 45}ms,
+                                 transform 0.3s ease ${index * 45}ms`;
+
+                            card.style.opacity =
+                                "1";
+
+                            card.style.transform =
+                                "translateY(0)";
+
+                        }
+                    );
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
